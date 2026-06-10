@@ -30,6 +30,7 @@ Dentro da VM, instale os pacotes necessários para compilar o kernel:
 - Isso valida que seu ambiente está funcionando corretamente
 - Instale o kernel compilado e confirme que o sistema ainda inicializa normalmente
 - **Tire outro snapshot aqui**
+- Vamos fazer 3 snapshots: Snapshot A (VM recém-instalada); Snapshot B (Kernel original recompilado e funcionando); Snapshot C (Antes de começar a alterar fs/open.c ou adicionar syscalls)
 
 ## 6. Estudar os Arquivos Relevantes Antes de Escrever Código
 
