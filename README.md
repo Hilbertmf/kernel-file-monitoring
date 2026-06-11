@@ -30,13 +30,13 @@
 ## 4. Snapshot A — VM recém-instalada
 - Tirar snapshot antes de qualquer outra modificação
 
-## 5. Instalar spice-vdagent (área de transferência compartilhada) e outras coisas
+## 5. Instalar spice-vdagent (área de transferência compartilhada) & miscs
 `sudo apt install spice-vdagent`
 - Reiniciar a VM
 - Confirmar que copy/paste entre host e VM funciona
-- instalar sublime
+- instalar sublime (direct download -> baixar .deb > dpkg -i)
 - add terminal to favorites
-- dark mode
+- dark mode (via tweaks)
 
 ## 6. Instalar dependências de compilação
 `sudo apt update`
@@ -59,8 +59,6 @@
 `cp /boot/config-$(uname -r) ~/kernel/linux-source-5.10/.config`
 
 `cd ~/kernel/linux-source-5.10`
-
-`make oldconfig`
 
 ## 10. Corrigir erro de chaves de assinatura
 `scripts/config --set-str SYSTEM_TRUSTED_KEYS ""`
