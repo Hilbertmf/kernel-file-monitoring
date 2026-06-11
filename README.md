@@ -85,6 +85,12 @@ Deve retornar 0
 
 - Ambos devem retornar resultados positivos antes de prosseguir
 
+if failed compilation:
+`make mrproper`
+`cp /boot/config-$(uname -r) .config`
+`make oldconfig`
+
+
 ## 13. Instalar o kernel compilado
 `sudo make modules_install`
 

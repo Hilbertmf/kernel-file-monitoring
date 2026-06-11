@@ -20,6 +20,15 @@ static char monitored_path[FILE_MONITOR_MAX_PATH];
 static struct file_monitor_entry log_buffer[FILE_MONITOR_MAX_LOGS];
 static int log_count;
 
+/*
+  Spinlock to protect:
+  - monitored_path
+  - log_buffer
+  - log_count
+ */
+static DEFINE_SPINLOCK(file_monitor_lock);
+
+
 void file_monitor_record_access(const char *path)
 {
     /* TODO */
@@ -27,8 +36,19 @@ void file_monitor_record_access(const char *path)
 
 int file_monitor_set_path(const char *path)
 {
-    /* TODO */
-    return 0;
+	unsigned long flags;
+
+	if (!path)
+		return -EINVAL;
+
+	spin_lock_irqsave(&file_monitor_lock, flags);
+
+	strncpy(monitored_path, path, FILE_MONITOR_MAX_PATH - 1);
+	monitored_path[FILE_MONITOR_MAX_PATH - 1] = '\0';
+
+	spin_unlock_irqrestore(&file_monitor_lock, flags);
+
+	return 0;
 }
 
 int file_monitor_read_logs(char __user *buffer, size_t size)
@@ -36,3 +56,11 @@ int file_monitor_read_logs(char __user *buffer, size_t size)
     /* TODO */
     return 0;
 }
+
+static int __init file_monitor_init(void)
+{
+	printk(KERN_INFO "file_monitor: initialized\n");
+	return 0;
+}
+
+early_initcall(file_monitor_init);
