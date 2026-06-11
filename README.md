@@ -6,7 +6,7 @@
 - Hypervisor: QEMU/KVM local
 - ISO: debian-11-amd64-netinst.iso
 - RAM: 8GB
-- vCPUs: 12
+- vCPUs: 8
 - Disco: 80GB
 - Firmware: BIOS (não UEFI)
 - Marcar "Customize configuration before install"
