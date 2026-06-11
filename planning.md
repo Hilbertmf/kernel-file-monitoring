@@ -256,8 +256,22 @@ Add:
 monitored path
 log buffer
 log entry structure
-spinlock (protege acesso concorrente ao path e ao buffer)
 ```
+
+Spinlock (protects concurrent access to path and buffer):
+Protect shared state with a spinlock.
+
+Protected data:
+
+- monitored_path
+- log_buffer
+- log_count
+
+Operations:
+
+- append log entry
+- clear buffer
+- update monitored path
 
 Goal:
 
