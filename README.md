@@ -108,6 +108,47 @@ Comando único para compilar e instalar o kernel:
 `uname -r`
 - Deve retornar `5.10.257`
 
+Como a versão numérica é idêntica à anterior, utilize as flags de metadados para confirmar o sucesso:
+
+* **Data e Hora da Compilação:** 
+  ```bash
+  uname -v
+  ```
+  *O horário exibido deve coincidir com o momento em que você executou o comando `make`.*
+
+* **Assinatura do Usuário e Host:**
+  ```bash
+  cat /proc/version
+  ```
+  *Certifique-se de que o seu usuário e o nome da sua máquina aparecem como os criadores da build (ex: `user@hostname`).*
+
+---
+
+### Verificação dos Arquivos Gerados (Antes do Reboot)
+
+Para garantir que a instalação de fato despejou os arquivos corretos nos diretórios do sistema, verifique as datas de modificação:
+
+* **Diretório de Inicialização (`/boot`):**
+  ```bash
+  ls -lh /boot/vmlinuz* /boot/initrd* /boot/System.map*
+  ```
+  *Os arquivos associados à versão `5.10.257+` devem apresentar a data e hora exatas da execução do `sudo make install`.*
+
+* **Diretório de Módulos (`/lib/modules`):**
+  ```bash
+  ls -ld /lib/modules/5.10.257+/kernel/
+  ```
+  *A pasta de módulos do novo kernel deve ter sido criada ou atualizada recentemente pelo `sudo make modules_install`.*
+
+
+### Sinais de Alerta (O que indica Falha)
+
+* **Data Antiga no `uname -v`:** O sistema ignorou sua instalação e iniciou o kernel antigo através do GRUB.
+* **Kernel Panic ou Tela Preta:** Falta de drivers críticos embutidos no kernel (como sistemas de arquivos ou drivers de disco) ou ausência de um arquivo *initramfs* atualizado.
+* **Perifericos Inoperantes (Sem Wi-Fi/Áudio):** O kernel iniciou, mas o comando `sudo make modules_install` falhou ou drivers essenciais não foram marcados no `make menuconfig`.
+
+---
+
 ## 15. Snapshot B — Kernel original recompilado e funcionando
 
 ## 16. Inicializar repositório git e instalar sublime
