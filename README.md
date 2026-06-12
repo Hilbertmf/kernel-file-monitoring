@@ -85,10 +85,13 @@ Deve retornar 0
 
 - Ambos devem retornar resultados positivos antes de prosseguir
 
-if failed compilation:
-`make mrproper`
+if failed compilation and want to make sure the compilation will start clean:
+
+`make clean`
 `cp /boot/config-$(uname -r) .config`
 `make oldconfig`
+
+However usually you don't need to do it, it'll make compilation take a lot of time
 
 
 ## 13. Instalar o kernel compilado
