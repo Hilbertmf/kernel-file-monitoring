@@ -1360,4 +1360,6 @@ int __sys_getsockopt(int fd, int level, int optname, char __user *optval,
 		int __user *optlen);
 int __sys_setsockopt(int fd, int level, int optname, char __user *optval,
 		int optlen);
+asmlinkage long sys_set_monitored_file(const char __user *path);
+asmlinkage long sys_read_file_monitor_logs(const char __user *buffer, size_t size);
 #endif

@@ -5,6 +5,12 @@
 #include <linux/timekeeping.h>
 #include <linux/types.h>
 #include <linux/file_monitor.h>
+#include <linux/init.h>
+#include <linux/errno.h>
+#include <linux/spinlock.h>
+#include <linux/syscalls.h>
+#include <linux/linkage.h>
+#include <linux/uaccess.h>
 
 #define FILE_MONITOR_MAX_PATH 256
 #define FILE_MONITOR_MAX_LOGS 64
@@ -90,14 +96,52 @@ int file_monitor_set_path(const char *path)
 
 int file_monitor_read_logs(char __user *buffer, size_t size)
 {
-    /* TODO */
-    return 0;
+    unsigned long flags;
+    struct file_monitor_entry local_buffer[FILE_MONITOR_MAX_LOGS];
+    int entries_to_copy, offset = 0, i;
+
+    spin_lock_irqsave(&file_monitor_lock, flags);
+
+    entries_to_copy = log_count;
+    memcpy(local_buffer, log_buffer, log_count * sizeof(struct file_monitor_entry));
+    log_count = 0;
+
+    spin_unlock_irqrestore(&file_monitor_lock, flags);
+
+    for(i = 0; i < entries_to_copy; ++i) {
+        char line[128];
+        int len;
+
+        len = snprintf(
+            line,
+            sizeof(line),
+            "pid = %d | uid = %u | ts = %lld.%09ld\n",
+            local_buffer[i].pid,
+            local_buffer[i].uid.val,
+            (long long)local_buffer[i].ts.tv_sec,
+            local_buffer[i].ts.tv_nsec);
+
+        if (offset + len >= size)
+            break;
+        if (copy_to_user(buffer + offset, line, len))
+            return -EFAULT;
+
+        offset += len;
+    }
+
+    return offset;
 }
 
-static int __init file_monitor_init(void)
+SYSCALL_DEFINE1(set_monitored_file, const char __user *, path)
 {
-    printk(KERN_INFO "file_monitor: initialized\n");
-    return 0;
+    char kpath[FILE_MONITOR_MAX_PATH];
+    if (strncpy_from_user(kpath, path, FILE_MONITOR_MAX_PATH) < 0)
+        return -EFAULT;
+    return file_monitor_set_path(kpath);
 }
 
-early_initcall(file_monitor_init);
+SYSCALL_DEFINE2(read_file_monitor_logs, char __user *, buffer, size_t, size)
+{
+    return file_monitor_read_logs(buffer, size);
+}
+

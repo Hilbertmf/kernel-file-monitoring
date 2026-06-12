@@ -362,6 +362,8 @@
 438	common	pidfd_getfd		sys_pidfd_getfd
 439	common	faccessat2		sys_faccessat2
 440	common	process_madvise		sys_process_madvise
+441	common	set_monitored_file		sys_set_monitored_file
+442	common	read_file_monitor_logs		sys_read_file_monitor_logs
 
 #
 # Due to a historical design error, certain syscalls are numbered differently
