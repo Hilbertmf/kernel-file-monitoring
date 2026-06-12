@@ -96,6 +96,9 @@ if failed compilation:
 
 `sudo make install`
 
+Comando único para compilar e instalar o kernel:
+`sudo true && make -j$(nproc) 2>&1 | tee ~/kernel-build.log && sudo make modules_install && sudo make install`
+
 ## 14. Reiniciar e confirmar novo kernel
 `sudo reboot`
 
