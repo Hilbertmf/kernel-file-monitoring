@@ -21,9 +21,9 @@ void set_path(char *path) {
     return;
 }
 
-void read_file(char *buffer, size_t size) {
+void read_logs(char *buffer, size_t size) {
     if (buffer == NULL) {
-        fprintf(stderr, "read_file: buffer is NULL\n");
+        fprintf(stderr, "read_logs: buffer is NULL\n");
         return;
     }
     memset(buffer, 0, size);
@@ -64,16 +64,16 @@ int main() {
     scanf("%s", &path);
     set_path(path);
     
-    read_file(buffer, sizeof(buffer));    
+    read_logs(buffer, sizeof(buffer));    
 
     for(int i = 0; i < 10; ++i) {
         open_file(path);
     }
     printf("\n");
     
-    read_file(buffer, sizeof(buffer));
+    read_logs(buffer, sizeof(buffer));
     printf("reading again to confirm buffer was cleared:\n");
-    read_file(buffer, sizeof(buffer));
+    read_logs(buffer, sizeof(buffer));
 
     return 0;
 }
